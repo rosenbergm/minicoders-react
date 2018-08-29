@@ -1,0 +1,86 @@
+<Modal size='small' open={this.state.open} onClose={this.handleCancel}>
+          <Modal.Header>
+            <h1>BECOME A HONEST<br/>EXCHANGE PLACES PRAGUE CONTRIBUTOR</h1>
+          </Modal.Header>
+          <Modal.Content scrolling>
+            <style>{`
+          body > div,
+          body > div > div,
+          body > div > div > div.login-form {
+            height: 100%;
+          }
+          `}
+          </style>
+          <Grid
+            textAlign="center"
+            style={{ height: '100%' }}
+            verticalAlign="middle"
+          >
+            <Grid.Column style={{ maxWidth: 450 }}>
+              <Header as="h2" color="teal" textAlign="center">
+                Register now!
+              </Header>
+              <Form size="large">
+                <Segment stacked>
+                  <Form.Input
+                    fluid
+                    icon="user"
+                    iconPosition="left"
+                    placeholder="First name"
+                    value={this.state.user.firstName}
+                    onChange={event => this.setState({ user: {...this.state.user, firstName: event.target.value }})}
+                  />
+                  <Form.Input
+                    fluid
+                    icon="user"
+                    iconPosition="left"
+                    placeholder="Surname"
+                    value={this.state.user.lastName}
+                    onChange={event => this.setState({ user: {...this.state.user, lastName: event.target.value }})}
+                  />
+                  <Form.Input
+                    fluid
+                    icon="user"
+                    iconPosition="left"
+                    placeholder="Username"
+                    value={this.state.user.username}
+                    onChange={event => this.setState({ user: {...this.state.user, username: event.target.value }})}
+                  />
+                  <Form.Input
+                    fluid
+                    icon="user"
+                    iconPosition="left"
+                    placeholder="E-Mail"
+                    value={this.state.user.email}
+                    onChange={event => this.setState({ user: {...this.state.user, email: event.target.value }})}
+                  />
+                  <Form.Input
+                    fluid
+                    icon="lock"
+                    iconPosition="left"
+                    placeholder="Password"
+                    type="password"
+                    value={this.state.user.password}
+                    onChange={event => this.setState({ user: {...this.state.user, password: event.target.value }})}
+                  />
+                  <Button color="teal" fluid size="large" onClick={() => this.register()}>Registrovat se<i style={{ marginLeft: '5px' }} className="sign in icon" /></Button>
+                </Segment>
+              </Form>
+            </Grid.Column>
+          </Grid>
+          <Divider/>
+          <h3>We need people, who meet the following requirements, who are:</h3>
+            <ul>
+              <li>living/studying in or visiting Prague.</li>
+              <li>willing to deliver <b>true</b>, <b>accurate</b> and <b>honest</b> data.</li>
+              <li>able to go into the streets of Prague once in a while and collect data (if you live here).</li>
+            </ul>
+            <Divider/>
+            <h3>We are so greatful that you are concidering this wonderful idea of becoming a contributor. It would be an acquisition to this community.</h3>
+            <h2>Any questions? Some suggestions?<br/> Write here: <i>info@hepp.ml</i></h2>
+            <Divider/>
+          </Modal.Content>
+          <Modal.Actions>
+            <Button positive onClick={() => this.handleCancel()} content="OK"/>
+          </Modal.Actions>
+        </Modal>
