@@ -22,12 +22,14 @@ export default class LoginFormComponent extends Component {
 
   render() {
     const appLogin = this.props
-    console.log(appLogin)
     return (
-      <Mutation onCompleted={(data) => {
-        console.log(data.login)
-        this.props.appLogin(data.login)
-       }} mutation={Mutations.LOGIN} variables={{data: { email: this.state.username, password: this.state.password }}}>
+      <Mutation
+         onCompleted={(data) => {
+          this.props.appLogin(data.login)
+         }}
+         mutation={Mutations.LOGIN}
+         variables={{data: { email: this.state.username, password: this.state.password }}}
+       >
         {(login, { loading, error, data } ) => {
           return (
             <div className="login-form">
