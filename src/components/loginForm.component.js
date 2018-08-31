@@ -21,7 +21,6 @@ export default class LoginFormComponent extends Component {
   handleCancel = () => this.setState({ open: false })
 
   render() {
-    const appLogin = this.props
     return (
       <Mutation
          onCompleted={(data) => {
