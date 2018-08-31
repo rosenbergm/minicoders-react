@@ -4,35 +4,105 @@ import '../App.css';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 import Queries from '../managers/queries'
+import { Button } from 'reactstrap'
 
+import AceEditor from 'react-ace'
+import brace from 'brace'
+
+import 'brace/ext/language_tools';
+import 'brace/mode/javascript';
+import 'brace/theme/monokai';
+
+var first = true;
+let resultBuffer = []
 class SecuredComponent extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
       res: [],
+      value: `let i = 2;\nconsole.log(i);`,
+      console: ''
+    }
+
+    var original = window.console;
+    window.console = {
+        log: (args) => {
+            resultBuffer.push(args);
+
+            /*this.setState({
+              console: `${this.state.console}<br /> ${resultBuffer.join('<br />')}`,
+            });*/
+            this.setState({
+              console: `${resultBuffer.join('<br />')}`,
+            });
+            original.log.apply(original, [args]);
+        }
+        , warn: (args) => {
+            // do sneaky stuff
+            //this.setState({ console: `${this.state.console}<br /> <span class='warning'>${args}</span>` });
+            original.warn.apply(original, [args]);
+        }
+        , error: (args) => {
+            // do sneaky stuff
+            original.error.apply(original, [args]);
+            //alert(args);
+            this.setState({ console: `${this.state.console}<br /> <span class='error'>${args}</span>` });
+        }
+    }
+  }
+
+  clearConsole() {
+    this.setState({ console: '' });
+    resultBuffer = []
+  }
+
+  onChange(newValue) {
+    this.setState({value: newValue});
+  }
+
+  evaluate() {
+    try {
+      eval(this.state.value, true);
+    } catch (e) {
+        console.error(e);
+    } finally {
+
     }
   }
 
   render() {
-    let res = []
-
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
         <a onClick={() => this.props.logout()} href="#">Odhlasit se</a>
+        <div>
+          <AceEditor
+            mode="javascript"
+            theme="monokai"
+            value={this.state.value}
+            onChange={(text) => this.onChange(text)}
+            name="content"
+            fontSize={13}
+            tabSize={2}
+            editorProps={{$blockScrolling: true}}
+            enableBasicAutocompletion={true}
+            enableLiveAutocompletion={true}
+            enableSnippets={true}
+            //width={window.innerWidth/2 + 'px'}
+          />
+        </div>
+        <Button onClick={() => this.evaluate()}>Spustit program</Button>
+        <Button onClick={() => this.clearConsole()}>Vyčistit konzoli</Button>
+        <div>
+          <div dangerouslySetInnerHTML={{__html: this.state.console}} />
+            <div style={{ float:"left", clear: "both" }}
+                  ref={(el) => { this.messagesEnd = el; }}>
+            </div>
+        </div>
         <Query query={Queries.GET_TASKS}>
           {({ data, error, loading }) => {
             if (error) return '💩 Oops!';
             if (loading) return 'Patience, patience...';
-
-            res = data.tasks
 
             return (
               data.tasks.map(task => (
