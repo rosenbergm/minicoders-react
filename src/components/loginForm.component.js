@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 //import api from '../helpers/api'
 import { Link } from 'react-router-dom'
 import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
+import { Mutation } from 'react-apollo';
+import Mutations from '../managers/mutations'
 
 
 export default class LoginFormComponent extends Component {
@@ -12,39 +14,43 @@ export default class LoginFormComponent extends Component {
       username: '',
       password: '',
       open: false,
-      user: {},
     }
   }
 
   show = () => this.setState({ open: true })
   handleCancel = () => this.setState({ open: false })
 
-  async logIn(response) {
-    const token = response ? response.text : ''
-
-    console.log(response)
-
-    localStorage.setItem('token', token)
-    this.props.login()
-  }
-
   render() {
-    let response
+    const appLogin = this.props
+    console.log(appLogin)
     return (
-      <div className="login-form">
-        {MUTATION}
-        <Form>
-          <FormGroup>
-            <Label for="exampleEmail">Email</Label>
-            <Input type="email" name="email" id="exampleEmail" placeholder="with a placeholder" />
-          </FormGroup>
-          <FormGroup>
-            <Label for="examplePassword">Password</Label>
-            <Input type="password" name="password" id="examplePassword" placeholder="password placeholder" />
-          </FormGroup>
-          <Button onClick={() => this.logIn(response)}>Submit</Button>
-        </Form>
-      </div>
+      <Mutation onCompleted={(data) => {
+        console.log(data.login)
+        this.props.appLogin(data.login)
+       }} mutation={Mutations.LOGIN} variables={{data: { email: this.state.username, password: this.state.password }}}>
+        {(login, { loading, error, data } ) => {
+          return (
+            <div className="login-form">
+              <Form onSubmit={e => {
+                e.preventDefault()
+                login()
+              }}>
+                <FormGroup>
+                  <Label for="email">Email</Label>
+                  <Input id="email" type="email" onChange={event => this.setState({ username: event.target.value })} />
+                </FormGroup>
+                <FormGroup>
+                  <Label for="password">Password</Label>
+                  <Input id="password" type="password" onChange={event => this.setState({ password: event.target.value })} />
+                </FormGroup>
+                <Button>Submit</Button>
+              </Form>
+              {loading && <p>Loading...</p>}
+              {error && <p>{error.toString()}</p>}
+            </div>
+          )
+        }}
+      </Mutation>
     )
   }
 }

@@ -26,13 +26,14 @@ class SecuredComponent extends Component {
         <p className="App-intro">
           To get started, edit <code>src/App.js</code> and save to reload.
         </p>
+        <a onClick={() => this.props.logout()} href="#">Odhlasit se</a>
         <Query query={Queries.GET_TASKS}>
           {({ data, error, loading }) => {
             if (error) return '💩 Oops!';
             if (loading) return 'Patience, patience...';
 
             res = data.tasks
-            
+
             return (
               data.tasks.map(task => (
                 <div key={task}>
@@ -49,7 +50,7 @@ class SecuredComponent extends Component {
           {({ data, error, loading }) => {
             if (error) return '💩 Oops!';
             if (loading) return 'Patience, patience...';
-            
+
             return (
               data.userTasks.map(userTask => (
                 <div key={userTask}>

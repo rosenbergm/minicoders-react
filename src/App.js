@@ -17,7 +17,8 @@ class App extends Component {
     }
   }
 
-  login() {
+  login(token) {
+    localStorage.setItem('token', token)
     this.setState({ action: 'login' })
   }
 
@@ -34,11 +35,12 @@ class App extends Component {
   }
 
   render() {
-    //const isLoggedIn = localStorage.getItem('token') && localStorage.getItem('token').length > 0;
+    const isLoggedIn = localStorage.getItem('token') && localStorage.getItem('token').length > 0;
 
     return (
       <div>
-        <SecuredComponent/>
+        {isLoggedIn && <SecuredComponent logout={() => this.logout()} />}
+        {!isLoggedIn && <LoginFormComponent appLogin={(token) => this.login(token)} />}
       </div>
     );
   }
