@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 import { Mutation } from 'react-apollo';
 import Mutations from '../managers/mutations'
-
+import Loader from './loader.component'
 
 export default class LoginFormComponent extends Component {
   constructor(props) {
@@ -30,6 +30,8 @@ export default class LoginFormComponent extends Component {
          variables={{data: { email: this.state.username, password: this.state.password }}}
        >
         {(login, { loading, error, data } ) => {
+          if (loading) return <Loader />;
+
           return (
             <div className="login-form">
               <Form onSubmit={e => {

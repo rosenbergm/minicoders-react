@@ -8,16 +8,15 @@ import { InMemoryCache } from 'apollo-boost';
 import { ApolloClient } from 'apollo-client';
 import { createHttpLink } from 'apollo-link-http';
 import { setContext } from 'apollo-link-context';
+import { Provider } from "react-redux";
+import store from './redux/store'
 
 const httpLink = createHttpLink({
   uri: 'http://localhost:7300',
 });
 
 const authLink = setContext((_, { headers }) => {
-  // get the authentication token from local storage if it exists
   const token = localStorage.getItem('token');
-  // return the headers to the context so httpLink can read them
-  //console.log(token ? `Bearer ${token}` : "")
   return {
     headers: {
       ...headers,
@@ -34,7 +33,9 @@ const client = new ApolloClient({
 
 const AppWithProvider = () => (
   <ApolloProvider client={client}>
-    <App />
+    <Provider store={store}>
+      <App />
+    </Provider>
   </ApolloProvider>
 );
 

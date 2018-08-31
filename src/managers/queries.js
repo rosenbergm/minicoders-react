@@ -4,6 +4,8 @@ const Queries = {
 GET_TASKS: gql`
   query tasks {
     tasks {
+      title
+      test
       id
       problem
       solution
@@ -22,7 +24,10 @@ GET_USER_TASKS: gql`
       progress
       taskId
       task {
+        title
+        problem
         solution
+        test
       }
     }
   }`,
