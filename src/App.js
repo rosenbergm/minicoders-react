@@ -4,9 +4,10 @@ import './App.css';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 import Queries from './managers/queries'
-import { Router } from 'react-router-dom'
+import { Route, Link, BrowserRouter as Router } from 'react-router-dom'
 import LoginFormComponent from './components/loginForm.component';
 import SecuredComponent from './components/secured.component';
+import RegisterFormComponent from './components/registerForm.component';
 
 class App extends Component {
   constructor(props) {
@@ -38,10 +39,13 @@ class App extends Component {
     const isLoggedIn = localStorage.getItem('token') && localStorage.getItem('token').length > 0;
 
     return (
-      <div>
-        {isLoggedIn && <SecuredComponent logout={() => this.logout()} />}
-        {!isLoggedIn && <LoginFormComponent appLogin={(token) => this.login(token)} />}
-      </div>
+      <Router>
+        <div>
+          <Route exact path='/register' component={RegisterFormComponent} />
+          {isLoggedIn && <SecuredComponent logout={() => this.logout()} />}
+          {!isLoggedIn && <LoginFormComponent appLogin={(token) => this.login(token)} />}
+        </div>
+      </Router>
     );
   }
 }

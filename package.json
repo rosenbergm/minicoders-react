@@ -8,6 +8,7 @@
     "apollo-client": "^2.4.1",
     "apollo-link-context": "^1.0.8",
     "apollo-link-http": "^1.5.4",
+    "bootstrap": "^4.1.1",
     "brace": "^0.11.1",
     "graphql": "^0.13.2",
     "graphql-tag": "^2.9.2",
