@@ -18,42 +18,45 @@ export default class RegisterFormComponent extends Component {
 
   render() {
     return (
-      <Mutation
-         onCompleted={(data) => {
-          //this.props.appLogin(data.login)
-         }}
-         mutation={Mutations.REGISTER}
-         variables={{data: { name: this.state.name, email: this.state.email , password: this.state.password }}}
-       >
-        {(register, { loading, error, data } ) => {
-          if (loading) return <Loader />;
+      <div style={{width: '400px', height: '300px', margin: 'auto', marginTop: window.innerHeight / 2 - 300 + 'px', marginBottom: window.innerHeight}}>
+        <Mutation
+          onCompleted={(data) => {
+            //this.props.appLogin(data.login)
+          }}
+          mutation={Mutations.REGISTER}
+          variables={{data: { name: this.state.name, email: this.state.email , password: this.state.password }}}
+        >
+          {(register, { loading, error, data } ) => {
+            if (loading) return <Loader />;
 
-          return (
-            <div className="login-form">
-              <Form onSubmit={e => {
-                e.preventDefault()
-                register()
-              }}>
-                <FormGroup>
-                  <Label for="name">Name</Label>
-                  <Input id="name" type="name" onChange={event => this.setState({ name: event.target.value })} />
-                </FormGroup>
-                <FormGroup>
-                  <Label for="email">Email</Label>
-                  <Input id="email" type="email" onChange={event => this.setState({ email: event.target.value })} />
-                </FormGroup>
-                <FormGroup>
-                  <Label for="password">Password</Label>
-                  <Input id="password" type="password" onChange={event => this.setState({ password: event.target.value })} />
-                </FormGroup>
-                <Button>Submit</Button>
-              </Form>
-              {loading && <p>Loading...</p>}
-              {error && <p>{error.toString()}</p>}
-            </div>
-          )
-        }}
-      </Mutation>
+            return (
+              <div className="login-form">
+                <Form onSubmit={e => {
+                  e.preventDefault()
+                  register()
+                }}>
+                  <h2 style={{textAlign: 'center', width: '400px'}}>Registrovat se</h2>
+                  <FormGroup>
+                    <Label for="name">Name</Label>
+                    <Input id="name" type="name" placeholder="Jmeno a prijmeni" onChange={event => this.setState({ name: event.target.value })} />
+                  </FormGroup>
+                  <FormGroup>
+                    <Label for="email">Email</Label>
+                    <Input id="email" type="email" placeholder="E-Mail" onChange={event => this.setState({ email: event.target.value })} />
+                  </FormGroup>
+                  <FormGroup>
+                    <Label for="password">Password</Label>
+                    <Input id="password" type="password" placeholder="Heslo" onChange={event => this.setState({ password: event.target.value })} />
+                  </FormGroup>
+                  <Button style={{width: '400px'}}>Submit</Button>
+                </Form>
+                {loading && <p>Loading...</p>}
+                {error && <p>{error.toString()}</p>}
+              </div>
+            )
+          }}
+        </Mutation>
+      </div>
     )
   }
 }
