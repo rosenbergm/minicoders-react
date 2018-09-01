@@ -15,7 +15,7 @@ export default class Tasks extends Component {
 
   render () {
     return (
-      <div>
+      <div style={{marginRight: '20px'}}>
         <Query query={Queries.GET_USER_TASKS}>
           {({ data, error, loading }) => {
             if (error) return '💩 Oops!';

@@ -76,7 +76,7 @@ class Editor extends Component {
             value={this.state.task.progress}
             onChange={(text) => { this.setState({ task: { ...this.state.task, progress: text } }) }}
             name="content"
-            fontSize={13}
+            fontSize={15}
             tabSize={2}
             editorProps={{$blockScrolling: true}}
             enableBasicAutocompletion={true}
