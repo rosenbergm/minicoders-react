@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
 import AceEditor from 'react-ace'
-import brace from 'brace'
-import Queries from '../managers/queries'
-import { Query } from 'react-apollo';
 import { Button } from 'reactstrap';
 import { connect } from 'react-redux';
 
@@ -37,7 +34,7 @@ class Editor extends Component {
       }
       , error: (args) => {
         original.error.apply(original, [args]);
-        this.setState({ console: `${this.state.console}<br /> <span class='error'>${args}</span>` });
+        //this.setState({ console: `${this.state.console}<br /> <span class='error'>${args}</span>` });
       }
     }
   }

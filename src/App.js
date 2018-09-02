@@ -8,46 +8,48 @@ import { Route, Link, BrowserRouter as Router } from 'react-router-dom'
 import LoginFormComponent from './components/loginForm.component';
 import SecuredComponent from './components/secured.component';
 import RegisterFormComponent from './components/registerForm.component';
+import Loader from './components/loader.component'
+import { connect } from 'react-redux';
+import store from './redux/store'
 
 class App extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
-
     this.state = {
-      action: undefined,
+      loaded: false
     }
   }
 
-  login(token) {
-    localStorage.setItem('token', token)
-    this.setState({ action: 'login' })
-  }
-
-  logout() {
-    console.log('loging out')
-    localStorage.setItem('token', '')
-    this.setState({ action: 'logout' })
-  }
-
-  setUser(user) {
-    this.setState({
-      user,
-    })
+  async componentDidMount() {
+    try {
+      const { data: user } = await this.props.client.query({query: Queries.GET_USER})
+      store.dispatch({ type: 'SET_USER', user: user })
+    } catch (e) {} finally {
+      this.setState({ loaded: true })
+    }
   }
 
   render() {
-    const isLoggedIn = localStorage.getItem('token') && localStorage.getItem('token').length > 0;
+    const isLoggedIn = this.props.user;
+
+    if (!this.state.loaded) {
+      return <Loader />
+    }
 
     return (
       <Router>
         <div>
           <Route exact path='/register' component={RegisterFormComponent} />
-          {isLoggedIn && <SecuredComponent logout={() => this.logout()} />}
-          {!isLoggedIn && <LoginFormComponent appLogin={(token) => this.login(token)} />}
+          <Route exact path='/login' component={LoginFormComponent} />
+          {isLoggedIn && <SecuredComponent />}
         </div>
       </Router>
     );
   }
 }
 
-export default App;
+function mapStateToProps(state) {
+  return { user: state.user };
+}
+
+export default connect(mapStateToProps)(App)

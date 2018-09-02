@@ -13,6 +13,19 @@ function reducer(state = initialState, action) {
         ...state,
         task: action.task
       };
+    case "LOGOUT":
+      localStorage.setItem('token', '')
+      return {
+        ...state,
+        user: undefined
+      };
+    case "LOGIN":
+      console.log(action)
+      localStorage.setItem('token', action.token)
+      return {
+        ...state,
+        user: action.user
+      };
     default:
       return state;
   }

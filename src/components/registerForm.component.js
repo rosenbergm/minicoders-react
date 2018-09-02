@@ -4,6 +4,7 @@ import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 import { Mutation } from 'react-apollo';
 import Mutations from '../managers/mutations'
 import Loader from './loader.component'
+import store from '../redux/store'
 
 export default class RegisterFormComponent extends Component {
   constructor(props) {
@@ -21,7 +22,8 @@ export default class RegisterFormComponent extends Component {
       <div style={{width: '400px', height: '300px', margin: 'auto', marginTop: window.innerHeight / 2 - 300 + 'px', marginBottom: window.innerHeight}}>
         <Mutation
           onCompleted={(data) => {
-            //this.props.appLogin(data.login)
+            store.dispatch({ type: 'LOGIN', user: data.register.user, token: data.register.token })
+            this.props.history.push('/')
           }}
           mutation={Mutations.REGISTER}
           variables={{data: { name: this.state.name, email: this.state.email , password: this.state.password }}}
@@ -52,6 +54,7 @@ export default class RegisterFormComponent extends Component {
                 </Form>
                 {loading && <p>Loading...</p>}
                 {error && <p>{error.toString()}</p>}
+                <Link to='/login'><h6 style={{textAlign: 'center', marginTop: '5px'}}>Přihlásit se</h6></Link>
               </div>
             )
           }}

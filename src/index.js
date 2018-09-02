@@ -13,7 +13,7 @@ import { Provider } from "react-redux";
 import store from './redux/store'
 
 const httpLink = createHttpLink({
-  uri: 'http://192.168.0.105:7300',
+  uri: 'http://localhost:7300',
 });
 
 const authLink = setContext((_, { headers }) => {
@@ -35,7 +35,7 @@ const client = new ApolloClient({
 const AppWithProvider = () => (
   <ApolloProvider client={client}>
     <Provider store={store}>
-      <App />
+      <App client={client} />
     </Provider>
   </ApolloProvider>
 );

@@ -5,6 +5,7 @@ import { Mutation } from 'react-apollo';
 import Mutations from '../managers/mutations'
 import Loader from './loader.component'
 import RegisterFormComponent from './registerForm.component';
+import store from '../redux/store'
 
 export default class LoginFormComponent extends Component {
   constructor(props) {
@@ -21,7 +22,8 @@ export default class LoginFormComponent extends Component {
       <div style={{width: '400px', height: '235px', margin: 'auto', marginTop: window.innerHeight / 2 - 235 + 'px'}}>
         <Mutation
           onCompleted={(data) => {
-            this.props.appLogin(data.login)
+            store.dispatch({ type: 'LOGIN', user: data.login.user, token: data.login.token })
+            this.props.history.push('/')
           }}
           mutation={Mutations.LOGIN}
           variables={{data: { email: this.state.email, password: this.state.password }}}

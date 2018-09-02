@@ -18,6 +18,13 @@ GET_USERS: gql`
       email
     }
   }`,
+GET_USER: gql`
+  query user {
+    user {
+      name
+      email
+    }
+  }`,
 GET_USER_TASKS: gql`
   query userTasks {
     userTasks {
