@@ -21,6 +21,13 @@ REGISTER: gql`
       }
     }
   }`,
+UPDATE_TASK: gql`
+  mutation updateTaskProgress ($data: UserTaskInput!) {
+    updateProgress (data: $data) {
+      id
+    }
+  }
+`
 }
 
 export default Mutations;

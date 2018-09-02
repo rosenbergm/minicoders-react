@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import AceEditor from 'react-ace'
 import { Button } from 'reactstrap';
 import { connect } from 'react-redux';
+import store from '../redux/store'
+import { Mutation } from 'react-apollo';
+import Mutations from '../managers/mutations'
+import Loader from './loader.component'
 
 import 'brace/ext/language_tools';
 import 'brace/mode/javascript';
@@ -13,42 +17,17 @@ class Editor extends Component {
 
     this.resultBuffer = []
     this.state = {
-      res: [],
       value: `let i = 2;\nconsole.log(i);`,
-      console: '',
       task: undefined,
       correctAnswer: false
     }
-
-    var original = window.console;
-    window.console = {
-      log: (args) => {
-        this.resultBuffer.push(args);
-        // this.setState({
-        //   console: `${this.resultBuffer.join('<br />')}`,
-        // });
-        original.log.apply(original, [args]);
-      }
-      , warn: (args) => {
-        original.warn.apply(original, [args]);
-      }
-      , error: (args) => {
-        original.error.apply(original, [args]);
-        //this.setState({ console: `${this.state.console}<br /> <span class='error'>${args}</span>` });
-      }
-    }
-  }
-
-  clearConsole() {
-    this.setState({ console: '' });
-    this.resultBuffer = []
   }
 
   evaluate() {
-    this.clearConsole()
     try {
       const result = Function(this.state.task.progress+'; return '+this.state.task.task.test)()
-      this.setState({ correctAnswer: result })
+      if (result) console.success('Ano to je spravne.')
+      else console.error('Bohuzel, je tam nekde chybka')
     } catch (e) {
       console.error(e);
     } finally {
@@ -64,9 +43,10 @@ class Editor extends Component {
 
   render () {
     return (
-      <div style={{ display: 'flex' }}>
+      <div style={{ display: 'flex', flex: 1 }}>
         {this.state.task &&
-        <div>
+        <div style={{ display: 'block' }}>
+          <div>{this.state.task.task.problem}</div>
           <AceEditor
             mode="javascript"
             theme="monokai"
@@ -81,18 +61,21 @@ class Editor extends Component {
             enableSnippets={true}
             //width={window.innerWidth/2 + 'px'}
           />
-          <div>{this.state.task.task.problem}</div>
-          <div>{this.state.correctAnswer && <span>Spravne.</span>}</div>
-          <div>{!this.state.correctAnswer && <span>Spatne.</span>}</div>
           <div>
             <Button onClick={() => this.evaluate()}>Spustit program</Button>
-            <Button onClick={() => this.clearConsole()}>Vyčistit konzoli</Button>
-          </div>
-          <div>
-            <div dangerouslySetInnerHTML={{__html: this.state.console}} />
-              <div style={{ float:"left", clear: "both" }}
-                    ref={(el) => { this.messagesEnd = el; }}>
-              </div>
+            <Mutation
+              onCompleted={(data) => {
+                console.success('Program uložen.')
+              }}
+              mutation={Mutations.UPDATE_TASK}
+              variables={{data: { taskId: this.state.task.id, progress: this.state.task.progress }}}
+            >
+              {(updateProgress, { loading, error, data } ) => {
+                if (loading) return <Loader />;
+
+                return (<Button onClick={() => updateProgress()}>Uložit</Button>)
+              }}
+              </Mutation>
           </div>
         </div>}
       </div>

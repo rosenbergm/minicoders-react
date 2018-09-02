@@ -5,12 +5,39 @@ import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 import Queries from './managers/queries'
 import { Route, Link, BrowserRouter as Router } from 'react-router-dom'
-import LoginFormComponent from './components/loginForm.component';
+import LoginFormComponent from './components/auth/loginForm.component';
 import SecuredComponent from './components/secured.component';
-import RegisterFormComponent from './components/registerForm.component';
+import RegisterFormComponent from './components/auth/registerForm.component';
 import Loader from './components/loader.component'
 import { connect } from 'react-redux';
 import store from './redux/store'
+
+var original = window.console;
+window.console = {
+  log: (args) => {
+    store.dispatch({
+      type: 'ADD_TO_CONSOLE',
+      log: args
+    })
+    original.log.apply(original, [args]);
+  },
+  success: (args) => {
+    store.dispatch({
+      type: 'ADD_TO_CONSOLE',
+      log: `<span style="color: green;">${args}</span>`
+    })
+  }
+  , warn: (args) => {
+    original.warn.apply(original, [args]);
+  }
+  , error: (args) => {
+    original.error.apply(original, [args]);
+    store.dispatch({
+      type: 'ADD_TO_CONSOLE',
+      log: `<span style="color: red;">${args}</span>`
+    })
+  }
+}
 
 class App extends Component {
   constructor (props) {
@@ -22,8 +49,13 @@ class App extends Component {
 
   async componentDidMount() {
     try {
-      const { data: user } = await this.props.client.query({query: Queries.GET_USER})
-      store.dispatch({ type: 'SET_USER', user: user })
+      const { data, errors } = await this.props.client.query({query: Queries.GET_USER})
+
+      if (data.user) {
+        store.dispatch({ type: 'SET_USER', user: data.user })
+      } else {
+        store.dispatch({ type: 'SET_USER', user: undefined })
+      }
     } catch (e) {} finally {
       this.setState({ loaded: true })
     }

@@ -1,29 +1,31 @@
 .App {
-  text-align: center;
-  margin: 20px;
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+.App > * {
+  flex: 0 0 auto;
+  overflow: scroll;
 }
 
 .App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
+  height: 50px;
+  background: #555;
   color: white;
 }
 
-.App-title {
-  font-size: 1.5em;
+.App > .App-main {
+  flex: 1 1 auto;
+  display: flex;
+  overflow: hidden;
 }
 
-.App-intro {
-  font-size: large;
+.App > .App-main > * {
+  flex: 0 0 auto;
+  overflow: scroll;
 }
 
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+.error {
+  color: red;
 }

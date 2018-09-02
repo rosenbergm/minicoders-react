@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom'
 import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 import { Mutation } from 'react-apollo';
-import Mutations from '../managers/mutations'
-import Loader from './loader.component'
-import store from '../redux/store'
+import Mutations from '../../managers/mutations'
+import Loader from '../loader.component'
+import store from '../../redux/store'
 
 export default class RegisterFormComponent extends Component {
   constructor(props) {

@@ -1,6 +1,8 @@
 import { createStore } from "redux";
 
-const initialState = {};
+const initialState = {
+  console: []
+};
 function reducer(state = initialState, action) {
   switch (action.type) {
     case "SET_USER":
@@ -20,12 +22,21 @@ function reducer(state = initialState, action) {
         user: undefined
       };
     case "LOGIN":
-      console.log(action)
       localStorage.setItem('token', action.token)
       return {
         ...state,
         user: action.user
       };
+    case "ADD_TO_CONSOLE":
+      return {
+        ...state,
+        console: [...state.console, action.log]
+      };
+    case "CLEAR_CONSOLE":
+    return {
+      ...state,
+      console: []
+    };
     default:
       return state;
   }

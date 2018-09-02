@@ -12,7 +12,7 @@ export default class MiniNavbar extends Component {
 
   render () {
     return (
-      <div>
+      <div className="App-header">
         <Query query={Queries.GET_USER}>
           {({ data, error, loading }) => {
             if (error || loading) return <span>Nothing to show...</span>
