@@ -28,16 +28,13 @@ GET_USER: gql`
 GET_USER_TASKS: gql`
   query userTasks {
     userTasks {
-      id
-      progress
       taskId
-      task {
-        id
-        title
-        problem
-        solution
-        test
-      }
+      userTaskId
+      progress
+      title
+      problem
+      solution
+      test
     }
   }`,
 }

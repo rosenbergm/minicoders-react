@@ -25,18 +25,19 @@ class Editor extends Component {
 
   evaluate() {
     try {
-      const result = Function(this.state.task.progress+'; return '+this.state.task.task.test)()
-      if (result) console.success('Ano to je spravne.')
-      else console.error('Bohuzel, je tam nekde chybka')
+      const result = Function('console', this.state.task.progress+'; return '+this.state.task.test)(this.props.console)
+
+      if (result) this.props.console.success('Ano to je spravne.')
+      else this.props.console.error('Bohuzel, je tam nekde chybka')
     } catch (e) {
-      console.error(e);
+      this.props.console.error(e);
     } finally {
 
     }
   }
 
   componentDidUpdate (prevProps, prevState, snapshot) {
-    if (!this.state.task || this.state.task.id !== this.props.task.id) {
+    if (!this.state.task || this.state.task.taskId !== this.props.task.taskId) {
       this.setState({ task: this.props.task })
     }
   }
@@ -46,11 +47,10 @@ class Editor extends Component {
       <div style={{ display: 'flex', flex: 1 }}>
         {this.state.task &&
         <div style={{ display: 'block' }}>
-          <div>{this.state.task.task.problem}</div>
+          <div>{this.state.task.problem}</div>
           <AceEditor
             mode="javascript"
-            theme="monokai"
-            value={this.state.task.progress}
+            value={this.state.task.progress || ''}
             onChange={(text) => { this.setState({ task: { ...this.state.task, progress: text } }) }}
             name="content"
             fontSize={15}
@@ -65,10 +65,14 @@ class Editor extends Component {
             <Button onClick={() => this.evaluate()}>Spustit program</Button>
             <Mutation
               onCompleted={(data) => {
-                console.success('Program uložen.')
+                this.props.console.success('Program uložen.')
               }}
               mutation={Mutations.UPDATE_TASK}
-              variables={{data: { taskId: this.state.task.id, progress: this.state.task.progress }}}
+              variables={{data: {
+                userTaskId: this.state.task.userTaskId,
+                taskId: this.state.task.taskId,
+                progress: this.state.task.progress
+              }}}
             >
               {(updateProgress, { loading, error, data } ) => {
                 if (loading) return <Loader />;

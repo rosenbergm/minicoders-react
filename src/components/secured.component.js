@@ -13,7 +13,7 @@ class SecuredComponent extends Component {
         <div className="App-main">
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <Tasks />
-            <Editor />
+            <Editor console={this.props.console} />
             <Console />
           </div>
         </div>

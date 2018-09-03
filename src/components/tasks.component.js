@@ -26,7 +26,7 @@ export default class Tasks extends Component {
                 <div key={userTask}>
                   <h2 onClick={() => {
                     store.dispatch({ type: 'SET_TASK', task: userTask })
-                  }}>{userTask.task.title}</h2>
+                  }}>{userTask.title}</h2>
                 </div>
               ))
             )

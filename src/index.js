@@ -11,6 +11,35 @@ import { createHttpLink } from 'apollo-link-http';
 import { setContext } from 'apollo-link-context';
 import { Provider } from "react-redux";
 import store from './redux/store'
+import * as consoleProxy from 'console-proxy'
+
+window.console.success = function () {}
+var console = consoleProxy.getConsole({
+    error: function () {
+      var args = Array.prototype.slice.apply(arguments);
+      store.dispatch({
+        type: 'ADD_TO_CONSOLE',
+        log: `<span style="color: red;">${args}</span>`
+      })
+      return args;
+    },
+    success: function () {
+      var args = Array.prototype.slice.apply(arguments);
+      store.dispatch({
+        type: 'ADD_TO_CONSOLE',
+        log: `<span style="color: green;">${args}</span>`
+      })
+      return args;
+    },
+    log: function () {
+      var args = Array.prototype.slice.apply(arguments);
+      store.dispatch({
+        type: 'ADD_TO_CONSOLE',
+        log: `${args}`
+      })
+      return args;
+    }
+  });
 
 const httpLink = createHttpLink({
   uri: 'http://localhost:7300',
@@ -35,7 +64,7 @@ const client = new ApolloClient({
 const AppWithProvider = () => (
   <ApolloProvider client={client}>
     <Provider store={store}>
-      <App client={client} />
+      <App client={client} console={console} />
     </Provider>
   </ApolloProvider>
 );
