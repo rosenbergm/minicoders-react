@@ -12,8 +12,8 @@ class SecuredComponent extends Component {
         <MiniNavbar />
         <div className="App-main">
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Tasks />
-            <Editor console={this.props.console} />
+            <Tasks client={this.props.client} />
+            <Editor client={this.props.client} console={this.props.console} />
             <Console />
           </div>
         </div>

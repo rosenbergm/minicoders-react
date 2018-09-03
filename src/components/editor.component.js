@@ -15,7 +15,6 @@ class Editor extends Component {
   constructor(props) {
     super(props)
 
-    this.resultBuffer = []
     this.state = {
       value: `let i = 2;\nconsole.log(i);`,
       task: undefined,
@@ -23,16 +22,30 @@ class Editor extends Component {
     }
   }
 
-  evaluate() {
+  async evaluate() {
+    let finished = false
     try {
       const result = Function('console', this.state.task.progress+'; return '+this.state.task.test)(this.props.console)
 
-      if (result) this.props.console.success('Ano to je spravne.')
+      if (result) {
+        finished = true
+        this.props.console.success('Ano to je spravne.')
+      }
       else this.props.console.error('Bohuzel, je tam nekde chybka')
     } catch (e) {
       this.props.console.error(e);
     } finally {
-
+      const task = {
+        userTaskId: this.state.task.userTaskId,
+        taskId: this.state.task.taskId,
+        progress: this.state.task.progress,
+        finished
+      }
+      const { data, errors } = await this.props.client.mutate({
+        mutation: Mutations.UPDATE_TASK,
+        variables: {data: task}
+      })
+      store.dispatch({ type: 'UPDATE_TASK', task: { ...this.state.task, finished } })
     }
   }
 
@@ -71,7 +84,8 @@ class Editor extends Component {
               variables={{data: {
                 userTaskId: this.state.task.userTaskId,
                 taskId: this.state.task.taskId,
-                progress: this.state.task.progress
+                progress: this.state.task.progress,
+                finished: this.state.task.finished
               }}}
             >
               {(updateProgress, { loading, error, data } ) => {

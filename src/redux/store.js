@@ -1,7 +1,8 @@
 import { createStore } from "redux";
 
 const initialState = {
-  console: []
+  console: [],
+  tasks: []
 };
 function reducer(state = initialState, action) {
   switch (action.type) {
@@ -10,10 +11,23 @@ function reducer(state = initialState, action) {
         ...state,
         user: action.user
       };
-    case "SET_TASK":
+    case "SET_ACTIVE_TASK":
       return {
         ...state,
         task: action.task
+      };
+    case "SET_TASKS":
+      return {
+        ...state,
+        tasks: action.tasks
+      };
+    case "UPDATE_TASK":
+      const index = state.tasks.findIndex(task => action.task.id === task.id)
+      const tasks = state.tasks.slice(0)
+      tasks[index] = action.task
+      return {
+        ...state,
+        tasks
       };
     case "LOGOUT":
       localStorage.setItem('token', '')

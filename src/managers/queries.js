@@ -26,8 +26,8 @@ GET_USER: gql`
     }
   }`,
 GET_USER_TASKS: gql`
-  query userTasks {
-    userTasks {
+  query userTasks ($data: UserTasksFilterInput!) {
+    userTasks (data: $data) {
       taskId
       userTaskId
       progress
@@ -35,6 +35,7 @@ GET_USER_TASKS: gql`
       problem
       solution
       test
+      finished
     }
   }`,
 }

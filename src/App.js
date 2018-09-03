@@ -53,7 +53,7 @@ class App extends Component {
         <div>
           <Route exact path='/register' component={RegisterFormComponent} />
           <Route exact path='/login' component={LoginFormComponent} />
-          {isLoggedIn && <SecuredComponent console={this.props.console} />}
+          {isLoggedIn && <SecuredComponent client={this.props.client} console={this.props.console} />}
         </div>
       </Router>
     );
