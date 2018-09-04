@@ -76,24 +76,6 @@ class Editor extends Component {
           />
           <div>
             <Button color="primary" onClick={() => this.evaluate()}>Spustit program</Button>
-            <Mutation
-              onCompleted={(data) => {
-                this.props.console.success('Program uložen.')
-              }}
-              mutation={Mutations.UPDATE_TASK}
-              variables={{data: {
-                userTaskId: this.state.task.userTaskId,
-                taskId: this.state.task.taskId,
-                progress: this.state.task.progress,
-                finished: this.state.task.finished
-              }}}
-            >
-              {(updateProgress, { loading, error, data } ) => {
-                if (loading) return <Loader />;
-
-                return (<Button color="success" onClick={() => updateProgress()}>Uložit</Button>)
-              }}
-              </Mutation>
           </div>
         </div>}
       </div>

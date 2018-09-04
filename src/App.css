@@ -46,7 +46,6 @@ html, body, .App, #root {
 }
 
 .App > .App-main > * {
-  flex: 0 0 auto;
   overflow: scroll;
 }
 
@@ -61,6 +60,13 @@ html, body, .App, #root {
   padding-bottom: 10px;
   margin-bottom: 15px;
   background-color: #f3f3f3;
+}
+
+.console {
+  background-color: #343a40;
+  flex: 1;
+  height: '100%';
+  color: #f3f3f3;
 }
 
 .tasks {

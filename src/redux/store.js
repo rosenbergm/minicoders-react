@@ -22,7 +22,7 @@ function reducer(state = initialState, action) {
         tasks: action.tasks
       };
     case "UPDATE_TASK":
-      const index = state.tasks.findIndex(task => action.task.id === task.id)
+      const index = state.tasks.findIndex(task => action.task.taskId === task.taskId)
       const tasks = state.tasks.slice(0)
       tasks[index] = action.task
       return {

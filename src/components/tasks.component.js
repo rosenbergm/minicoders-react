@@ -48,6 +48,10 @@ class Tasks extends Component {
     return this.props.task && task.taskId === this.props.task.taskId
   }
 
+  taskChanged (task) {
+    return this.props.task && this.props.task.taskId === task.taskId && this.props.task !== task
+  }
+
   render () {
 
     return (
@@ -63,7 +67,7 @@ class Tasks extends Component {
           {this.props.tasks.map(userTask => (
             <div className={`task-item ${this.taskSelected(userTask) && 'selected'}`} key={userTask} onClick={() => {
               store.dispatch({ type: 'SET_ACTIVE_TASK', task: userTask })
-            }}>{userTask.title} {userTask.finished && <FaCheck color="green" />}
+            }}>{userTask.title} {userTask.finished && <FaCheck color="green" />} {this.taskChanged(userTask) && 'asdf'}
             </div>
           ))}
         </div>
