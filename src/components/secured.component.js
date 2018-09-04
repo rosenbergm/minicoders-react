@@ -9,10 +9,10 @@ class SecuredComponent extends Component {
   render() {
     return (
       <div className="App">
-        <MiniNavbar />
+        <Tasks client={this.props.client} />
         <div className="App-main">
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Tasks client={this.props.client} />
+          <MiniNavbar />
+          <div style={{ display: 'flex', justifyContent: 'space-between', height: '100%' }}>
             <Editor client={this.props.client} console={this.props.console} />
             <Console />
           </div>

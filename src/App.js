@@ -50,7 +50,7 @@ class App extends Component {
 
     return (
       <Router>
-        <div>
+        <div style={{ height: '100%' }}>
           <Route exact path='/register' component={RegisterFormComponent} />
           <Route exact path='/login' component={LoginFormComponent} />
           {isLoggedIn && <SecuredComponent client={this.props.client} console={this.props.console} />}

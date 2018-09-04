@@ -5,6 +5,8 @@ import { Query } from 'react-apollo';
 import Loader from './loader.component'
 import store from '../redux/store'
 import { connect } from 'react-redux';
+import { FaCheck, FaCode, FaSignOutAlt } from 'react-icons/fa';
+import User from './auth/user.component'
 
 class Tasks extends Component {
   constructor (props) {
@@ -42,28 +44,36 @@ class Tasks extends Component {
     }
   }
 
+  taskSelected (task) {
+    return this.props.task && task.taskId === this.props.task.taskId
+  }
+
   render () {
 
     return (
-      <div>
-        <span onClick={() => this.levelDown()}>Dolu</span>
+      <div className="App-tasks">
+        <h2 href="/">mini<FaCode />CODERS</h2>
+        <div className="divider"></div>
+        <User />
+        <div className="divider"></div>
+        {/*<span onClick={() => this.levelDown()}>Dolu</span>
         {this.state.level}
-        <span onClick={() => this.levelUp()}>Nahoru</span>
-        <ListGroup>
+        <span onClick={() => this.levelUp()}>Nahoru</span>*/}
+        <div className="tasks">
           {this.props.tasks.map(userTask => (
-            <ListGroupItem className={userTask.finished ? 'text-success' : ''} key={userTask} onClick={() => {
+            <div className={`task-item ${this.taskSelected(userTask) && 'selected'}`} key={userTask} onClick={() => {
               store.dispatch({ type: 'SET_ACTIVE_TASK', task: userTask })
-            }}>{userTask.title}
-            </ListGroupItem>
+            }}>{userTask.title} {userTask.finished && <FaCheck color="green" />}
+            </div>
           ))}
-        </ListGroup>
+        </div>
       </div>
     )
   }
 }
 
 function mapStateToProps(state) {
-  return { tasks: state.tasks };
+  return { tasks: state.tasks, task: state.task, user: state.user };
 }
 
 export default connect(mapStateToProps)(Tasks);

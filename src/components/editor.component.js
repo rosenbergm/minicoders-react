@@ -57,10 +57,9 @@ class Editor extends Component {
 
   render () {
     return (
-      <div style={{ display: 'flex', flex: 1 }}>
+      <div style={{ display: 'flex', flex: 2, height: '100%' }}>
         {this.state.task &&
-        <div style={{ display: 'block' }}>
-          <div>{this.state.task.problem}</div>
+        <div style={{ display: 'block', width: '100%', height: 'calc(100% - 50px)' }}>
           <AceEditor
             mode="javascript"
             value={this.state.task.progress || ''}
@@ -68,14 +67,15 @@ class Editor extends Component {
             name="content"
             fontSize={15}
             tabSize={2}
-            editorProps={{$blockScrolling: true}}
+            // editorProps={{$blockScrolling: true}}
             enableBasicAutocompletion={true}
             enableLiveAutocompletion={true}
             enableSnippets={true}
-            //width={window.innerWidth/2 + 'px'}
+            height={'calc(50%)'}
+            width={'100%'}
           />
           <div>
-            <Button onClick={() => this.evaluate()}>Spustit program</Button>
+            <Button color="primary" onClick={() => this.evaluate()}>Spustit program</Button>
             <Mutation
               onCompleted={(data) => {
                 this.props.console.success('Program uložen.')
@@ -91,7 +91,7 @@ class Editor extends Component {
               {(updateProgress, { loading, error, data } ) => {
                 if (loading) return <Loader />;
 
-                return (<Button onClick={() => updateProgress()}>Uložit</Button>)
+                return (<Button color="success" onClick={() => updateProgress()}>Uložit</Button>)
               }}
               </Mutation>
           </div>

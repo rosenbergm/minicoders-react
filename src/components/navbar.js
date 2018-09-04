@@ -5,7 +5,7 @@ import { Query } from 'react-apollo';
 import { Navbar, NavbarBrand, Collapse, Nav, NavItem } from 'reactstrap'
 import { connect } from 'react-redux';
 
-export default class MiniNavbar extends Component {
+class MiniNavbar extends Component {
   constructor (props) {
     super(props)
   }
@@ -13,25 +13,16 @@ export default class MiniNavbar extends Component {
   render () {
     return (
       <div className="App-header">
-        <Query query={Queries.GET_USER}>
-          {({ data, error, loading }) => {
-            if (error || loading) return <span>Nothing to show...</span>
-
-            return (
-              <Navbar color="light" light expand="md">
-                <NavbarBrand href="/">miniCODERS</NavbarBrand>
-                <Collapse navbar>
-                  <Nav className="ml-auto" navbar>
-                    <NavItem>
-                      <a style={{padding: '20px'}} onClick={() => store.dispatch({ type: 'LOGOUT' })} href="/login">{data.user.name} - Odhlasit se</a>
-                    </NavItem>
-                  </Nav>
-                </Collapse>
-              </Navbar>
-            )
-          }}
-        </Query>
+        <Navbar expand="md">
+          <span>{this.props.task && this.props.task.problem}</span>
+        </Navbar>
       </div>
     )
   }
 }
+
+function mapStateToProps(state) {
+  return { task: state.task };
+}
+
+export default connect(mapStateToProps)(MiniNavbar);

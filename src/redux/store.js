@@ -31,6 +31,7 @@ function reducer(state = initialState, action) {
       };
     case "LOGOUT":
       localStorage.setItem('token', '')
+      window.location = '/login'
       return {
         ...state,
         user: undefined
