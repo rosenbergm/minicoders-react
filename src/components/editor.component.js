@@ -25,7 +25,7 @@ class Editor extends Component {
   async evaluate() {
     let finished = false
     try {
-      const result = Function('console', this.state.task.progress+'; return '+this.state.task.test)(this.props.console)
+      const result = Function('console', 'consoleStack', this.state.task.progress+'; return '+this.state.task.test)(this.props.console, this.props.consoleStack)
 
       if (result) {
         finished = true
@@ -84,7 +84,7 @@ class Editor extends Component {
 }
 
 function mapStateToProps(state) {
-  return { task: state.task };
+  return { task: state.task, consoleStack: state.console };
 }
 
 export default connect(mapStateToProps)(Editor);
