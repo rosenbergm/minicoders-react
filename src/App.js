@@ -26,7 +26,7 @@ class App extends Component {
       const { data, errors } = await this.props.client.query({query: Queries.GET_USER})
 
       if (data && data.user && !errors) {
-        window.location.pushState({}, 'Login', '/')
+        window.history.pushState({}, 'Login', '/')
         store.dispatch({ type: 'SET_USER', user: data.user })
       } else {
         window.history.pushState({}, 'Login', '/login')

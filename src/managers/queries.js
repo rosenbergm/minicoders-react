@@ -36,6 +36,7 @@ GET_USER_TASKS: gql`
       solution
       test
       finished
+      canvas
     }
   }`,
 }

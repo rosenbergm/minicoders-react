@@ -25,7 +25,37 @@ class Editor extends Component {
   async evaluate() {
     let finished;
     try {
-      const result = Function('console', 'consoleStack', this.state.task.progress+'; return '+this.state.task.test)(this.props.console, this.props.consoleStack)
+      const canvas = `const canvas = document.getElementById('canvas')
+        const context = canvas.getContext('2d')
+        const canvasWrap = document.getElementById('canvas-wrap')
+
+        const width = canvasWrap.offsetWidth
+        const height = canvasWrap.offsetHeight - 6
+        canvas.width = width
+        canvas.height = height
+
+        let posX = 0
+        let posY = 0
+        let ballColor = '#000'
+        let ballRadius = 10
+
+        function drawBall() {
+          init()
+
+          context.beginPath();
+          context.arc(posX, posY, ballRadius, 0, Math.PI*2);
+          context.fillStyle = ballColor;
+          context.fill();
+          context.closePath();
+        }
+
+        function init() {
+          context.clearRect(0, 0, canvas.width, canvas.height);
+          context.fillStyle = '#fff';
+          context.fillRect(0, 0, canvas.width, canvas.height)
+        }
+        `
+      const result = Function('console', 'consoleStack', canvas+this.state.task.progress+'; return '+this.state.task.test)(this.props.console, this.props.consoleStack)
 
       if (result) {
         finished = true
@@ -60,7 +90,7 @@ class Editor extends Component {
 
   render () {
     return (
-      <div style={{ display: 'flex', flex: 2, height: '100%' }}>
+      <div style={{ display: 'flex', flex: 1, height: '100%' }}>
         {this.state.task &&
         <div style={{ display: 'block', width: '100%', height: 'calc(100% - 50px)' }}>
           <AceEditor
@@ -74,7 +104,7 @@ class Editor extends Component {
             enableBasicAutocompletion={true}
             enableLiveAutocompletion={true}
             enableSnippets={true}
-            height={'calc(50%)'}
+            height={'100%'}
             width={'100%'}
           />
           <div>

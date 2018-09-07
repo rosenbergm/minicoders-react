@@ -4,6 +4,7 @@ import Tasks from './tasks.component'
 import Editor from './editor.component'
 import Console from './console.component'
 import MiniNavbar from './navbar'
+import { connect } from 'react-redux';
 
 class SecuredComponent extends Component {
   render() {
@@ -13,7 +14,12 @@ class SecuredComponent extends Component {
         <div className="App-main">
           <MiniNavbar />
           <div style={{ display: 'flex', justifyContent: 'space-between', height: '100%' }}>
-            <Editor client={this.props.client} console={this.props.console} />
+            <div style={{ display: 'flex', flexDirection: 'column', flex: 3 }}>
+              <Editor client={this.props.client} console={this.props.console} />
+              {this.props.task && this.props.task.canvas && <div id="canvas-wrap" style={{ flex: 1 }}>
+                <canvas id="canvas"></canvas>
+              </div>}
+            </div>
             <Console />
           </div>
         </div>
@@ -22,4 +28,8 @@ class SecuredComponent extends Component {
   }
 }
 
-export default SecuredComponent;
+function mapStateToProps(state) {
+  return { task: state.task };
+}
+
+export default connect(mapStateToProps)(SecuredComponent);
