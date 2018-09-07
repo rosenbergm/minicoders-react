@@ -23,7 +23,7 @@ class Editor extends Component {
   }
 
   async evaluate() {
-    let finished = false
+    let finished;
     try {
       const result = Function('console', 'consoleStack', this.state.task.progress+'; return '+this.state.task.test)(this.props.console, this.props.consoleStack)
 
@@ -31,7 +31,10 @@ class Editor extends Component {
         finished = true
         this.props.console.success('Ano to je spravne.')
       }
-      else this.props.console.error('Bohuzel, je tam nekde chybka')
+      else {
+        this.props.console.error('Bohuzel, je tam nekde chybka')
+        finished = false
+      }
     } catch (e) {
       this.props.console.error(e);
     } finally {

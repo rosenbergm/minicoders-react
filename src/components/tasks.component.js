@@ -6,6 +6,7 @@ import Loader from './loader.component'
 import store from '../redux/store'
 import { connect } from 'react-redux';
 import { FaCheck, FaCode, FaSignOutAlt } from 'react-icons/fa';
+import { MdCancel } from "react-icons/md";
 import User from './auth/user.component'
 
 class Tasks extends Component {

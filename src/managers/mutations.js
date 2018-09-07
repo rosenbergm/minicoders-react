@@ -21,6 +21,15 @@ REGISTER: gql`
       }
     }
   }`,
+UPDATE_USER: gql`
+  mutation userUpdate ($data: UserInput!) {
+    userUpdate(data: $data) {
+      
+        name
+        password
+      
+    }
+  }`,
 UPDATE_TASK: gql`
   mutation updateTaskProgress ($data: UserTaskInput!) {
     updateProgress (data: $data) {
