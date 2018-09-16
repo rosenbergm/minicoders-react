@@ -6,6 +6,7 @@ GET_USERS: gql`
     users {
       name
       email
+      isAdmin
     }
   }`,
 GET_USER: gql`
@@ -13,6 +14,7 @@ GET_USER: gql`
     user {
       name
       email
+      isAdmin
     }
   }`,
 GET_USER_TASKS: gql`

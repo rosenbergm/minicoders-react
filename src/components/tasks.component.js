@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import { FaCheck, FaCode, FaSignOutAlt } from 'react-icons/fa';
 import { MdCancel } from "react-icons/md";
 import User from './auth/user.component'
+import { Link } from 'react-router-dom'
 
 class Tasks extends Component {
   constructor (props) {
@@ -55,6 +56,7 @@ class Tasks extends Component {
     return (
       <div className="App-tasks">
         <h2 href="/">mini<FaCode />CODERS</h2>
+        {this.props.user.isAdmin && <Link to='/admin'><h6 style={{textAlign: 'center', marginTop: '5px'}}>Admin sekce</h6></Link>}
         <div className="divider"></div>
         <User />
         <div className="divider"></div>

@@ -36,6 +36,18 @@ UPDATE_TASK: gql`
       taskId
     }
   }
+`,
+CREATE_TASK: gql`
+  mutation createTask ($data: TaskInput!) {
+    createTask (data: $data) {
+      title
+      problem
+      solution
+      test
+      category
+      canvas
+    }
+  }
 `
 }
 

@@ -11,6 +11,8 @@ import RegisterFormComponent from './components/auth/registerForm.component';
 import Loader from './components/loader.component'
 import { connect } from 'react-redux';
 import store from './redux/store'
+import TaskFormComponent from './components/taskForm.component';
+import AdminComponent from './components/admin.component';
 
 class App extends Component {
   constructor (props) {
@@ -50,6 +52,9 @@ class App extends Component {
     return (
       <Router>
         <div style={{ height: '100%' }}>
+          {isLoggedIn && <Route exact path='/admin' component={AdminComponent} />}
+          <Route exact path="/task/edit/:taskId" component={TaskFormComponent} />
+
           <Route exact path='/register' component={RegisterFormComponent} />
           <Route exact path='/login' component={LoginFormComponent} />
           {isLoggedIn && <SecuredComponent client={this.props.client} console={this.props.console} />}
