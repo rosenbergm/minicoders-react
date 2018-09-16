@@ -13,11 +13,11 @@ class SecuredComponent extends Component {
         <Tasks client={this.props.client} />
         <div className="App-main">
           <MiniNavbar />
-          <div style={{ display: 'flex', justifyContent: 'space-between', height: '100%' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', flex: 3 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'column', height: '100%' }}>
+            <div style={{ display: 'flex', flexDirection: 'row', flex: 3 }}>
               <Editor client={this.props.client} console={this.props.console} />
-              {this.props.task && this.props.task.canvas && <div id="canvas-wrap" style={{ flex: 1 }}>
-                <canvas id="canvas"></canvas>
+              {this.props.task && this.props.task.canvas && <div id="container" style={{ flex: 1, margin: '2px' }}>
+                <canvas id="canvas" style={{ border: '1px solid grey' }}></canvas>
               </div>}
             </div>
             <Console />

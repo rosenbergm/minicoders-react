@@ -12,9 +12,13 @@ function reducer(state = initialState, action) {
         user: action.user
       };
     case "SET_ACTIVE_TASK":
+      window.clearIntervals()
+      window.reset()
+      const task = Object.assign({}, action.task)
+      task.progress = action.task.progress || action.task.default || ''
       return {
         ...state,
-        task: action.task
+        task
       };
     case "SET_TASKS":
       return {
@@ -22,6 +26,7 @@ function reducer(state = initialState, action) {
         tasks: action.tasks
       };
     case "UPDATE_TASK":
+      window.reset()
       const index = state.tasks.findIndex(task => action.task.taskId === task.taskId)
       const tasks = state.tasks.slice(0)
       tasks[index] = action.task
@@ -43,11 +48,13 @@ function reducer(state = initialState, action) {
         user: action.user
       };
     case "ADD_TO_CONSOLE":
+    window.consoleStack.push(action.log)
       return {
         ...state,
         console: [...state.console, action.log]
       };
     case "CLEAR_CONSOLE":
+    window.consoleStack = []
     return {
       ...state,
       console: []

@@ -23,6 +23,7 @@ html, body, .App, #root {
   width: 240px;
   background-color: #343a40;
   color: white;
+  border-right: 1px solid hsla(0,0%,100%,.3);
 }
 
 .App-tasks h2 {
@@ -64,9 +65,9 @@ html, body, .App, #root {
 
 .console {
   background-color: #343a40;
-  flex: 1;
   height: '100%';
   color: #f3f3f3;
+  padding: 5px;
 }
 
 .tasks {

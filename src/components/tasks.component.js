@@ -13,9 +13,10 @@ class Tasks extends Component {
   constructor (props) {
     super(props)
 
+    this.levels = [ 'basics', 'ball' ]
     this.state = {
       task: undefined,
-      level: 1
+      level: 0
     }
   }
 
@@ -38,7 +39,7 @@ class Tasks extends Component {
   }
 
   async loadTasks () {
-    const { data, errors } = await this.props.client.query({query: Queries.GET_USER_TASKS, variables: { data: { level: this.state.level }} })
+    const { data, errors } = await this.props.client.query({query: Queries.GET_USER_TASKS, variables: { data: { category: this.levels[this.state.level] }} })
 
     if (data) {
       store.dispatch({ type: 'SET_TASKS', tasks: data.userTasks })
@@ -57,9 +58,9 @@ class Tasks extends Component {
         <div className="divider"></div>
         <User />
         <div className="divider"></div>
-        {/*<span onClick={() => this.levelDown()}>Dolu</span>
+        <span onClick={() => this.levelDown()}>Dolu</span>
         {this.state.level}
-        <span onClick={() => this.levelUp()}>Nahoru</span>*/}
+        <span onClick={() => this.levelUp()}>Nahoru</span>
         <div className="tasks">
           {this.props.tasks.map(userTask => (
             <div className={`task-item ${this.taskSelected(userTask) && 'selected'}`} key={userTask} onClick={() => {

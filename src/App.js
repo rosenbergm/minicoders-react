@@ -21,7 +21,6 @@ class App extends Component {
   }
 
   async componentDidMount() {
-    document.title = 'mini</>CODERS'
     try {
       const { data, errors } = await this.props.client.query({query: Queries.GET_USER})
 

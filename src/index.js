@@ -13,7 +13,18 @@ import { Provider } from "react-redux";
 import store from './redux/store'
 import * as consoleProxy from 'console-proxy'
 
+window.reset = () => {
+  window.consoleStack = []
+  window.positionStack = []
+}
+window.reset()
 window.console.success = function () {}
+window.intervals = []
+window.clearIntervals = () => {
+  window.intervals.map(interval => clearInterval(interval))
+}
+
+
 var console = consoleProxy.getConsole({
     error: function () {
       var args = Array.prototype.slice.apply(arguments);

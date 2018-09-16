@@ -14,6 +14,7 @@ import 'brace/theme/monokai';
 class Editor extends Component {
   constructor(props) {
     super(props)
+    this.intervals = []
 
     this.state = {
       value: `let i = 2;\nconsole.log(i);`,
@@ -23,39 +24,70 @@ class Editor extends Component {
   }
 
   async evaluate() {
-    let finished;
+    let finished
     try {
-      const canvas = `const canvas = document.getElementById('canvas')
-        const context = canvas.getContext('2d')
-        const canvasWrap = document.getElementById('canvas-wrap')
+      let after = ''
+      let canvas = ''
+      if (this.state.task.canvas) {
+        canvas = `const canvas = document.getElementById('canvas')
+          const context = canvas.getContext('2d')
+          const canvasWrap = document.getElementById('container')
 
-        const width = canvasWrap.offsetWidth
-        const height = canvasWrap.offsetHeight - 6
-        canvas.width = width
-        canvas.height = height
+          let ballColor = '#000'
+          let ballRadius = 10
 
-        let posX = 0
-        let posY = 0
-        let ballColor = '#000'
-        let ballRadius = 10
+          const width = canvasWrap.offsetWidth - 5
+          const height = canvasWrap.offsetHeight - 5
 
-        function drawBall() {
-          init()
+          canvas.width = width
+          canvas.height = height
 
-          context.beginPath();
-          context.arc(posX, posY, ballRadius, 0, Math.PI*2);
-          context.fillStyle = ballColor;
-          context.fill();
-          context.closePath();
-        }
+          let posX = 0
+          let posY = 0
 
-        function init() {
-          context.clearRect(0, 0, canvas.width, canvas.height);
-          context.fillStyle = '#fff';
-          context.fillRect(0, 0, canvas.width, canvas.height)
-        }
-        `
-      const result = Function('console', 'consoleStack', canvas+this.state.task.progress+'; return '+this.state.task.test)(this.props.console, this.props.consoleStack)
+          function drawBall() {
+            init()
+
+            window.positionStack.push(posX+'x'+posY+'y')
+            context.beginPath();
+            context.arc(posX, posY, ballRadius, 0, Math.PI*2);
+            context.fillStyle = ballColor;
+            context.fill();
+            context.closePath();
+          }
+
+          function init() {
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            context.fillStyle = '#fff';
+            context.fillRect(0, 0, canvas.width, canvas.height)
+          }
+          `
+
+          after = `
+            window.canvasWidth = width
+            window.canvasHeight = height
+            window.ballRadius = ballRadius
+            `
+      }
+
+      const result = Function('console', canvas+this.state.task.progress+after+'; return '+this.state.task.test)(this.props.console)
+
+
+      if (this.state.task.canvas) {
+        window.clearIntervals()
+        window.intervals.push(setInterval(() => {
+          const testResult = Function('return '+this.state.task.test)()
+
+          const start = `${window.ballRadius}x${window.ballRadius}y`
+          const rightTopCorner = `${window.canvasWidth-window.ballRadius}x${window.ballRadius+1}y`
+          const rightBottomCorner = `${window.canvasWidth-window.ballRadius-1}x${window.canvasHeight-window.ballRadius}y`
+          const leftBottomCorner = `${window.ballRadius}x${window.canvasHeight-window.ballRadius-1}y`
+          this.props.console.log(window.positionStack.includes(start))
+          this.props.console.log(window.positionStack.includes(rightTopCorner), rightTopCorner)
+          this.props.console.log(window.positionStack.includes(rightBottomCorner), rightBottomCorner)
+          this.props.console.log(window.positionStack.includes(leftBottomCorner), leftBottomCorner)
+        }, 5000))
+      }
 
       if (result) {
         finished = true
@@ -90,12 +122,12 @@ class Editor extends Component {
 
   render () {
     return (
-      <div style={{ display: 'flex', flex: 1, height: '100%' }}>
+      <div style={{ display: 'flex', flex: 2, height: '100%' }}>
         {this.state.task &&
         <div style={{ display: 'block', width: '100%', height: 'calc(100% - 50px)' }}>
           <AceEditor
             mode="javascript"
-            value={this.state.task.progress || ''}
+            value={this.state.task.progress}
             onChange={(text) => { this.setState({ task: { ...this.state.task, progress: text } }) }}
             name="content"
             fontSize={15}

@@ -1,16 +1,6 @@
 import gql from 'graphql-tag'
 
 const Queries = {
-GET_TASKS: gql`
-  query tasks {
-    tasks {
-      title
-      test
-      id
-      problem
-      solution
-    }
-  }`,
 GET_USERS: gql`
   query users {
     users {
@@ -37,6 +27,8 @@ GET_USER_TASKS: gql`
       test
       finished
       canvas
+      default
+      category
     }
   }`,
 }
