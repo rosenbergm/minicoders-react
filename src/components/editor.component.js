@@ -72,30 +72,40 @@ class Editor extends Component {
 
       const result = Function('console', canvas+this.state.task.progress+after+'; return '+this.state.task.test)(this.props.console)
 
-
-      if (this.state.task.canvas) {
+      if (this.state.task.canvas && this.state.task.asyncTest) {
         window.clearIntervals()
-        window.intervals.push(setInterval(() => {
-          const testResult = Function('return '+this.state.task.test)()
-
-          const start = `${window.ballRadius}x${window.ballRadius}y`
-          const rightTopCorner = `${window.canvasWidth-window.ballRadius}x${window.ballRadius+1}y`
-          const rightBottomCorner = `${window.canvasWidth-window.ballRadius-1}x${window.canvasHeight-window.ballRadius}y`
-          const leftBottomCorner = `${window.ballRadius}x${window.canvasHeight-window.ballRadius-1}y`
-          this.props.console.log(window.positionStack.includes(start))
-          this.props.console.log(window.positionStack.includes(rightTopCorner), rightTopCorner)
-          this.props.console.log(window.positionStack.includes(rightBottomCorner), rightBottomCorner)
-          this.props.console.log(window.positionStack.includes(leftBottomCorner), leftBottomCorner)
+        window.intervals.push(setInterval(async () => {
+          const testResult = Function(this.state.task.test)()
+          // TODO refactor, duplications
+          if (testResult) {
+            finished = true
+            this.props.console.success('Ano to je spravne.')
+            window.clearIntervals()
+            const task = {
+              userTaskId: this.state.task.userTaskId,
+              taskId: this.state.task.taskId,
+              progress: this.state.task.progress,
+              finished
+            }
+            const { data, errors } = await this.props.client.mutate({
+              mutation: Mutations.UPDATE_TASK,
+              variables: {data: task}
+            })
+            console.log('debug', { ...this.state.task, ...task })
+            store.dispatch({ type: 'UPDATE_TASK', task: { ...this.state.task, ...task } })
+          }
         }, 5000))
       }
 
-      if (result) {
-        finished = true
-        this.props.console.success('Ano to je spravne.')
-      }
-      else {
-        this.props.console.error('Bohuzel, je tam nekde chybka')
-        finished = false
+      if (!this.state.task.asyncTest) {
+        if (result) {
+          finished = true
+          this.props.console.success('Ano to je spravne.')
+          window.clearIntervals()
+        } else {
+          this.props.console.error('Bohuzel, je tam nekde chybka')
+          finished = false
+        }
       }
     } catch (e) {
       this.props.console.error(e);
@@ -110,7 +120,7 @@ class Editor extends Component {
         mutation: Mutations.UPDATE_TASK,
         variables: {data: task}
       })
-      store.dispatch({ type: 'UPDATE_TASK', task: { ...this.state.task, finished } })
+      store.dispatch({ type: 'UPDATE_TASK', task: { ...this.state.task, ...task } })
     }
   }
 
@@ -122,7 +132,7 @@ class Editor extends Component {
 
   render () {
     return (
-      <div style={{ display: 'flex', flex: 2, height: '100%' }}>
+      <div style={{ display: 'flex', flex: 3, height: '100%' }}>
         {this.state.task &&
         <div style={{ display: 'block', width: '100%', height: 'calc(100% - 50px)' }}>
           <AceEditor

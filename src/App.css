@@ -41,7 +41,7 @@ html, body, .App, #root {
 }
 
 .App > .App-main {
-  flex: 1 1 auto;
+  flex: 4 1 auto;
   display: flex;
   overflow: hidden;
 }
@@ -90,4 +90,8 @@ html, body, .App, #root {
 
 .divider {
   border-bottom: 1px solid hsla(0,0%,100%,.3);
+}
+
+.action {
+  cursor: pointer;
 }

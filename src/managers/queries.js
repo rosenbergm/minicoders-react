@@ -27,6 +27,7 @@ GET_USER_TASKS: gql`
       problem
       solution
       test
+      asyncTest
       finished
       canvas
       default

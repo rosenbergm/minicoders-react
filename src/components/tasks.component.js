@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import { ListGroup, ListGroupItem } from 'reactstrap'
+import { ListGroup, ListGroupItem, Container, Row, Col } from 'reactstrap'
 import Queries from '../managers/queries'
 import { Query } from 'react-apollo';
 import Loader from './loader.component'
 import store from '../redux/store'
 import { connect } from 'react-redux';
-import { FaCheck, FaCode, FaSignOutAlt } from 'react-icons/fa';
+import { FaCheck, FaCode, FaSignOutAlt, FaChevronRight, FaChevronLeft } from 'react-icons/fa';
 import { MdCancel } from "react-icons/md";
 import User from './auth/user.component'
 import { Link } from 'react-router-dom'
@@ -15,6 +15,7 @@ class Tasks extends Component {
     super(props)
 
     this.levels = [ 'basics', 'ball' ]
+    this.levelsTitle = [ 'Základy', 'Kulička' ]
     this.state = {
       task: undefined,
       level: 0
@@ -22,11 +23,11 @@ class Tasks extends Component {
   }
 
   levelUp () {
-    this.setState({ level: this.state.level + 1 })
+    this.setState({ level: this.state.level !== this.levels.length - 1 ? this.state.level + 1 : this.state.level })
   }
 
   levelDown () {
-    this.setState({ level: this.state.level - 1 })
+    this.setState({ level: this.state.level !== 0 ? this.state.level - 1 : this.state.level })
   }
 
   async componentDidMount () {
@@ -40,7 +41,13 @@ class Tasks extends Component {
   }
 
   async loadTasks () {
-    const { data, errors } = await this.props.client.query({query: Queries.GET_USER_TASKS, variables: { data: { category: this.levels[this.state.level] }} })
+    const { data, errors } = await this.props.client.query({
+      query: Queries.GET_USER_TASKS,
+      variables: {
+        data: {
+          category: this.levels[this.state.level]
+        }}
+    })
 
     if (data) {
       store.dispatch({ type: 'SET_TASKS', tasks: data.userTasks })
@@ -60,9 +67,20 @@ class Tasks extends Component {
         <div className="divider"></div>
         <User />
         <div className="divider"></div>
-        <span onClick={() => this.levelDown()}>Dolu</span>
-        {this.state.level}
-        <span onClick={() => this.levelUp()}>Nahoru</span>
+
+        <Container>
+          <Row>
+            <Col xs="3">
+              <span class="action" onClick={() => this.levelDown()}><FaChevronLeft /></span>
+            </Col>
+            <Col xs="auto">{this.levelsTitle[this.state.level]}</Col>
+            <Col xs="3">
+              <span class="action" onClick={() => this.levelUp()}><FaChevronRight /></span>
+            </Col>
+          </Row>
+        </Container>
+
+        <div className="divider"></div>
         <div className="tasks">
           {this.props.tasks.map(userTask => (
             <div className={`task-item ${this.taskSelected(userTask) && 'selected'}`} key={userTask} onClick={() => {
