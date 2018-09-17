@@ -1,0 +1,41 @@
+stages:
+  - test
+  - build & deploy staging
+  - build & deploy production
+
+run tests:
+  stage: test
+  script:
+    - whoami
+    - "docker build -f Dockerfile.staging -t ${CI_REGISTRY}/${CI_PROJECT_PATH}:latest-staging ."
+    # - "docker run ${CI_REGISTRY}/${CI_PROJECT_PATH}:latest-staging npm run coverage"
+
+deploy to staging:
+  environment: staging
+  stage: build & deploy staging
+  before_script:
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - mkdir -p ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - ssh-keyscan -H "${SERVER_HOSTNAME}" >> ~/.ssh/known_hosts
+    - "docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY"
+  script:
+    - "docker build -f Dockerfile -t ${CI_REGISTRY}/${CI_PROJECT_PATH}:latest-staging ."
+    - "docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}:latest-staging"
+    - ssh ${SERVER_USER}@${SERVER_HOSTNAME} "docker pull ${CI_REGISTRY}/${CI_PROJECT_PATH}:latest-staging"
+    - ssh ${SERVER_USER}@${SERVER_HOSTNAME} "docker stop minicoders-react || true"
+    - ssh ${SERVER_USER}@${SERVER_HOSTNAME} "docker rm minicoders-react || true"
+    - ssh ${SERVER_USER}@${SERVER_HOSTNAME} "docker run -e 'NODE_ENV=staging' --restart always --name minicoders-react -d -p 5000:5000 ${CI_REGISTRY}/${CI_PROJECT_PATH}:latest-staging serve -s build"
+  after_script:
+    - "docker logout ${CI_REGISTRY}"
+  only:
+    - master
+
+deploy to production:
+  environment: production
+  stage: build & deploy production
+  when: manual
+  script: date
+  only:
+    - master
